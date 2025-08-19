@@ -1,9 +1,9 @@
-
+import sys
 
 symbols = {
     0: '_',
-    1: '❌',
-    2: '⭕'
+    1: 'X',
+    2: 'O'
 }
 
 grid = [[0,0,0], [0,0,0], [0,0,0]]
@@ -20,22 +20,44 @@ def main():
         else:
             current_player = 1
 
-    declare_winner(current_player)
+    if current_player == 1:
+        print("Hooray, Player One is victorious!")
+    else:
+        print("Hoorah, Player Two is victorious!")
 
 def player_go(player):
     while True:
-        move = input(f"Player {player} Enter a row and column like \"A1\"").strip().lower()
-        column = move[0]
-        if column not in ['a', 'b', 'c']:
+        try:
+            move = input(f"Player {player} Enter a row and column like \"A1\": ").strip().lower()
+        except IndexError:
+            continue
+        except EOFError:
+            sys.exit("Game cancelled.")
+        if move[0] not in ['a', 'b', 'c']:
             continue 
         try:
-            row = int(move[1])
+            row_number = int(move[1])
         except ValueError:
             continue
-        if row < 1 or row > 3:
+        if row_number < 1 or row_number > 3:
             continue
         
-        # update grid
+        # convert row and column input to index numbers
+        if move[0] == 'a':
+            column = 0
+        elif move[0] == 'b':
+            column = 1
+        else:
+            column = 2
+        row = row_number - 1
+        
+        # check that the row / column aren't taken already
+        if grid[row][column] != 0:
+            print("That move is taken")
+            continue
+
+        # update the grid
+        grid[row][column] = player
         
         return
 
@@ -48,9 +70,31 @@ def print_grid():
         r_number = r_number + 1
 
 def we_have_a_winner():
-    ...
-
-def declare_winner(player):
-    ...
+    # there are 8 possible wins for each player
+    # all the As
+    if grid[0][0] != 0 and (grid[0][0] == grid[1][0] == grid[2][0]):
+        return True
+    # all the Bs
+    if grid[0][1] != 0 and (grid[0][1] == grid[1][1] == grid[2][1]):
+        return True
+    # all the Cs
+    if grid[0][2] != 0 and (grid[0][2] == grid[1][2] == grid[2][2]):
+        return True
+    # all the 1s
+    if grid[0][0] != 0 and (grid[0][0] == grid[0][1] == grid[0][2]):
+        return True
+    # all the 2s
+    if grid[1][0] != 0 and (grid[1][0] == grid[1][1] == grid[1][2]):
+        return True
+    # all the 3s
+    if grid[2][0] != 0 and (grid[2][0] == grid[2][1] == grid[2][2]):
+        return True
+    # diagonal left to right
+    if grid[0][0] != 0 and (grid[0][0] == grid[1][1] == grid[2][2]):
+        return True
+    # diagonal right to left 
+    if grid[0][2] != 0 and (grid[0][2] == grid[1][1] == grid[2][0]):
+        return True
+    return False
 
 main()    
