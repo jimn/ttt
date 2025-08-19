@@ -1,9 +1,9 @@
 import sys
 
 symbols = {
-    0: '_',
-    1: 'X',
-    2: 'O'
+    0: '__',
+    1: '❌',
+    2: '⭕'
 }
 
 grid = [[0,0,0], [0,0,0], [0,0,0]]
@@ -64,9 +64,9 @@ def player_go(player):
 
 def print_grid():
     r_number = 1
-    print("  A B C")
+    print("   A. B. C.")
     for row in grid:
-        print(f"{r_number} {symbols[row[0]]} {symbols[row[1]]} {symbols[row[2]]} ")
+        print(f"{r_number}. {symbols[row[0]]} {symbols[row[1]]} {symbols[row[2]]} ")
         r_number = r_number + 1
 
 def we_have_a_winner():
